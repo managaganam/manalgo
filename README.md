@@ -32,9 +32,11 @@ To compile Manalgo you will need the folowing dependancy:
 
 If you have a Debian-based distribution the following command
 will install all the dependency you need:
+
     sudo apt-get install build-essential qt5-default
 
 Now you can compile Manalgo with the following commands:
+
     git clone https://github.com/managaganam/manalgo
     cd manalgo
     mkdir build
@@ -75,6 +77,7 @@ Below is the usage of the managa binary:
     
 For instance, if you want to generate the painting "strates" with the default
 resolution, width, height, output and quality option just type:
+
     ./manalgo --painting strates
 
 You'll find the result as a file named _output.png_ at the same location as
