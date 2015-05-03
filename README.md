@@ -53,11 +53,13 @@ Manalgo comes with a shell script _exhibit.sh_. This script allows
 you to automatically generate every available paintings in an outputs
 directory.
 Put this script in the same folder as the manalgo binary then just type:
+
     chmod +x exhibit.sh
     ./exhibit.sh
 
 The _manalgo_ binary is a classic command line tool working with option.
 Below is the usage of the managa binary:
+
     Usage: ./manalgo [options]
     Digital and algorithmical art renderer
     
@@ -103,9 +105,8 @@ Yes I did, mainly in 70x70cm and in 50x50cm as posters. I also tried
 My favorite is "strates" on 70x70cm. I used a high quality JPEG of 
 a 6000x6000px resolution to print it.
 I did that through a commercial website whom first goal is not to print
-digital art, but more some family and holiday picture. I don't want
-to do any advertising here.
-Anyway, I am satisfied with the quality for the moment.
+digital art. I don't want to do any advertising here.
+Anyway, I am satisfied with the result for the moment.
 
 ### I am totally in love with what you did and I want to do an exhibit of your art ! How can we do that ?
 
