@@ -44,13 +44,18 @@ int heightParam;
 int qualityOutputParam;
 QString outputParam;
 QString paintingParam;
+bool signParam;
 
+// Paintings
 void strates(QPainter *painter);
 void frontieres(QPainter *painter);
 void determinisme(QPainter *painter);
 void augen(QPainter *painter, int serie);
 void mosaique(QPainter *painter, int serie);
 void caribouXor125(QPainter *painter);
+
+// Global purpose functions
+void addSignature(QPainter *painter);
 
 int random(int min, int max) // both included
 {
@@ -66,7 +71,7 @@ int main(int argc, char *argv[])
 
     // List of paintings available
     QStringList paintings;
-    paintings << STRATES << FRONTIERES << DETERMINISME << AUGEN_0 << AUGEN_1 << AUGEN_2 << MOSAIQUE_0 << MOSAIQUE_1 << CARIBOU_XOR_125;
+    paintings << STRATES << FRONTIERES << DETERMINISME << AUGEN_0 << AUGEN_1 << AUGEN_2 << MOSAIQUE_0 << MOSAIQUE_1;
 
     // Parsing arguments
     QCommandLineParser parser;
@@ -86,6 +91,8 @@ int main(int argc, char *argv[])
     parser.addOption(qualityOutputOption);
     QCommandLineOption paintingOption("painting", "painting to use", "painting", paintings.first());
     parser.addOption(paintingOption);
+    QCommandLineOption signOption("sign", "add a Managa signature to the painting");
+    parser.addOption(signOption);
 
     parser.process(a);
 
@@ -96,6 +103,15 @@ int main(int argc, char *argv[])
             std::cout << paintings.at(i).toStdString() << std::endl;
         }
         return 0;
+    }
+
+    if(parser.isSet(signOption))
+    {
+        signParam = true;
+    }
+    else
+    {
+        signParam = false;
     }
 
     outputParam = parser.value(outputOption);
@@ -153,6 +169,11 @@ int main(int argc, char *argv[])
         return -1;
     }
 
+    if(signParam)
+    {
+        addSignature(painter);
+    }
+
     delete painter;
 
     // Saving the output
@@ -161,6 +182,24 @@ int main(int argc, char *argv[])
     delete img;
 
     return 0;
+}
+
+void addSignature(QPainter *painter)
+{
+    QString pathToImg = QString::fromLatin1("../material/managa-sign.svg");
+    if(!QFile(pathToImg).exists())
+    {
+        qWarning() << "Error: could not find the file " << pathToImg;
+        qWarning() << "No signature";
+        return;
+    }
+
+    QImage sign(pathToImg);
+    int width = widthParam / 25;
+    float ratio = float(sign.height()) / float(sign.width());
+    int height = int(ratio * float(width));
+
+    painter->drawImage(QRect(widthParam - width, heightParam - height, width, height), sign);
 }
 
 void strates(QPainter *painter)
