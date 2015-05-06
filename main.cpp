@@ -186,7 +186,7 @@ int main(int argc, char *argv[])
 
 void addSignature(QPainter *painter)
 {
-    QString pathToImg = QString::fromLatin1("../material/managa-sign.svg");
+    QString pathToImg = QString::fromLatin1("./material/managa-sign.svg");
     if(!QFile(pathToImg).exists())
     {
         qWarning() << "Error: could not find the file " << pathToImg;
