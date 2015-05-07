@@ -38,6 +38,7 @@
 #define MOSAIQUE_0 "mosaique0"
 #define MOSAIQUE_1 "mosaique1"
 #define CARIBOU_XOR_125 "caribouxor125"
+#define NOUS "nous"
 
 int widthParam;
 int heightParam;
@@ -53,6 +54,7 @@ void determinisme(QPainter *painter);
 void augen(QPainter *painter, int serie);
 void mosaique(QPainter *painter, int serie);
 void caribouXor125(QPainter *painter);
+void nous(QPainter *painter);
 
 // Global purpose functions
 void addSignature(QPainter *painter);
@@ -71,7 +73,7 @@ int main(int argc, char *argv[])
 
     // List of paintings available
     QStringList paintings;
-    paintings << STRATES << FRONTIERES << DETERMINISME << AUGEN_0 << AUGEN_1 << AUGEN_2 << MOSAIQUE_0 << MOSAIQUE_1;
+    paintings << STRATES << FRONTIERES << DETERMINISME << AUGEN_0 << AUGEN_1 << AUGEN_2 << MOSAIQUE_0 << MOSAIQUE_1 << NOUS;
 
     // Parsing arguments
     QCommandLineParser parser;
@@ -162,6 +164,10 @@ int main(int argc, char *argv[])
     else if(paintingParam == CARIBOU_XOR_125)
     {
         caribouXor125(painter);
+    }
+    else if(paintingParam == NOUS)
+    {
+        nous(painter);
     }
     else
     {
@@ -458,4 +464,102 @@ void caribouXor125(QPainter *painter)
     }
 
     painter->drawImage(QRect(0, 0, widthParam, heightParam), caribou);
+}
+
+float fitnessNous(QList<QColor> pop)
+{
+    // The higher the note is the better it is
+
+    // Test sum of green
+    float note;
+    for(int i=0; i<pop.count(); ++i)
+    {
+        note += pop.at(i).green();
+        note -= pop.at(i).blue() / 3; // and we still want to have some blue
+        note -= pop.at(i).red() / 5;  // and green but not too much
+    }
+
+    return note;
+}
+
+void nous(QPainter *painter)
+{
+    const int populationSize = 200;
+    const int nbIteration = populationSize; // This make something quadratic
+    // Sorting a line thanks to a genetic algorithm, each iteration with a better result will be displayed
+
+    // Creating the initial population
+    QList<QColor> initialPopulation;
+    for(int i=0; i<populationSize; ++i)
+    {
+        initialPopulation.append(QColor(random(0,100), random(0,255), random(0,255)));
+    }
+
+    float bestNote = fitnessNous(initialPopulation);
+
+    // Draw the initial population
+    int currentY = 0;
+    int squareHeight = heightParam / nbIteration;
+    int squareWidth = widthParam / populationSize;
+    for(int i=0; i<populationSize; ++i)
+    {
+        painter->setPen(initialPopulation.at(i));
+        painter->setBrush(initialPopulation.at(i));
+        painter->drawRect(i*squareWidth, currentY, squareWidth, squareHeight);
+    }
+    currentY += squareHeight;
+
+    // Iterate
+    QList<QColor> currentPopulation(initialPopulation);
+    for(int i=0; i<nbIteration; ++i)
+    {
+        bool betterSolution = false;
+        while(!betterSolution)
+        {
+            QList<QColor> selectedPopulation(currentPopulation);
+            // Crossing or not
+            if(i%2 == 0) // Crossing one out of 2
+            {
+                int ind = random(1, populationSize);
+                QList<QColor> temp;
+                for(int j=ind; j<populationSize; ++j)
+                {
+                    temp.append(selectedPopulation.at(j));
+                }
+                for(int j=0; j<ind; j++)
+                {
+                    temp.append(selectedPopulation.at(j));
+                }
+                selectedPopulation.swap(temp);
+            }
+
+            // Mutation
+            int nbMutation = random(1, 10);
+            for(int i=0; i<nbMutation; ++i)
+            {
+                int ind = random(0, populationSize - 1);
+                selectedPopulation.replace(ind, QColor(random(0, 255), random(0, 255), random(0, 255)));
+            }
+
+            // Calculate note of the selected population
+            float selectedNote = fitnessNous(selectedPopulation);
+
+            if(bestNote < selectedNote)
+            {
+                currentPopulation = selectedPopulation;
+                bestNote = selectedNote;
+                betterSolution = true;
+            }
+        }
+
+        // Draw the better solution
+        for(int i=0; i<populationSize; ++i)
+        {
+            painter->setPen(currentPopulation.at(i));
+            painter->setBrush(currentPopulation.at(i));
+            painter->drawRect(i*squareWidth, currentY, squareWidth, squareHeight);
+        }
+        currentY += squareHeight;
+
+    }
 }
