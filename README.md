@@ -88,10 +88,9 @@ Frequently Asked Questions
 
 ### What does it look like ?
 
-I am thinking about doing a website to present the outputs. 
-Meanwhile the only way you can see how it looks like is to download the code,
-compile it and execute it to generate the outputs images.
-If it's too geeky for you, I can send you stuff.
+Visit: [http://managaganam.github.io](http://managaganam.github.io)
+
+Or download the code, compile it and execute it to generate the outputs images.
 
 ### What can I do with the source code ?
 
