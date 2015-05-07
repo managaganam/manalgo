@@ -471,7 +471,7 @@ float fitnessNous(QList<QColor> pop)
     // The higher the note is the better it is
 
     // Test sum of green
-    float note;
+    float note = 0;
     for(int i=0; i<pop.count(); ++i)
     {
         note += pop.at(i).green();
