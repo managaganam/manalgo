@@ -39,6 +39,7 @@
 #define MOSAIQUE_1 "mosaique1"
 #define CARIBOU_XOR_125 "caribouxor125"
 #define NOUS "nous"
+#define BOITES "boites"
 
 int widthParam;
 int heightParam;
@@ -55,6 +56,7 @@ void augen(QPainter *painter, int serie);
 void mosaique(QPainter *painter, int serie);
 void caribouXor125(QPainter *painter);
 void nous(QPainter *painter);
+void boites(QPainter *painter, QImage *img);
 
 // Global purpose functions
 void addSignature(QPainter *painter);
@@ -168,6 +170,10 @@ int main(int argc, char *argv[])
     else if(paintingParam == NOUS)
     {
         nous(painter);
+    }
+    else if(paintingParam == BOITES)
+    {
+        boites(painter, img);
     }
     else
     {
@@ -561,5 +567,80 @@ void nous(QPainter *painter)
         }
         currentY += squareHeight;
 
+    }
+}
+
+int nextFreeY(int x, QImage *img)
+{
+    for(int i=0; i<heightParam; ++i)
+    {
+
+        QColor c(img->pixel(x, i));
+        // as soon as we find a white one we draw it
+        if(c.red() == 50 && c.green() == 100 && c.blue() == 180)
+        {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+int nextFreeX(int y, QImage *img)
+{
+    for(int i=0; i<widthParam; ++i)
+    {
+
+        QColor c(img->pixel(i, y));
+        if(c.red() == 50 && c.green() == 100 && c.blue() == 180)
+        {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+void boites(QPainter *painter, QImage *img)
+{
+    // Fill the background with a nice color
+    painter->fillRect(0,0, widthParam, heightParam, QColor(50, 100, 180));
+
+    bool full = false;
+    QPen pen;
+    pen.setWidth(10);
+
+    painter->setPen(pen);
+
+    int currentYTopLeft = 0;
+
+    while(!full)
+    {
+        int currentXTopLeft = 0;
+        int width = random(200, widthParam / 4);
+        int height = random(100, widthParam / 5);
+        bool lineComplete = false;
+
+        while(!lineComplete)
+        {
+            painter->setBrush(QColor(random(0, 255), random(0, 255), random(0, 255)));
+            QRect rect(currentXTopLeft, currentYTopLeft, width, height);
+            painter->drawRect(rect);
+
+            // Go to next one
+            width = random(300, widthParam / 7);
+            height = random(200, widthParam / 3);
+            currentXTopLeft = nextFreeX(currentYTopLeft, img);
+
+            if(currentXTopLeft == -1 || currentXTopLeft > widthParam)
+                lineComplete = true;
+        }
+
+        currentYTopLeft = nextFreeY(0, img);
+
+        if(currentYTopLeft == -1 || currentYTopLeft > heightParam)
+        {
+            full = true;
+        }
     }
 }
