@@ -22,6 +22,9 @@
 #include <QRgb>
 #include <QFile>
 
+#include "utils.h"
+#include "squaretime.h"
+
 // Default parameter for the app
 #define WIDTH "6000"
 #define HEIGHT "6000"
@@ -40,6 +43,7 @@
 #define CARIBOU_XOR_125 "caribouxor125"
 #define NOUS "nous"
 #define BOITES "boites"
+#define SQUARE_TIME "squaretime"
 
 int widthParam;
 int heightParam;
@@ -60,12 +64,6 @@ void boites(QPainter *painter, QImage *img);
 
 // Global purpose functions
 void addSignature(QPainter *painter);
-
-int random(int min, int max) // both included
-{
-    qsrand(qrand());
-    return min + (qrand() % (max - min + 1));
-}
 
 int main(int argc, char *argv[])
 {
@@ -174,6 +172,10 @@ int main(int argc, char *argv[])
     else if(paintingParam == BOITES)
     {
         boites(painter, img);
+    }
+    else if(paintingParam == SQUARE_TIME)
+    {
+        SquareTime(painter, img);
     }
     else
     {
