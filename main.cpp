@@ -24,6 +24,7 @@
 
 #include "utils.h"
 #include "squaretime.h"
+#include "boids.h"
 
 // Default parameter for the app
 #define WIDTH "6000"
@@ -44,6 +45,7 @@
 #define NOUS "nous"
 #define BOITES "boites"
 #define SQUARE_TIME "squaretime"
+#define BOIDS "boids"
 
 int widthParam;
 int heightParam;
@@ -176,6 +178,10 @@ int main(int argc, char *argv[])
     else if(paintingParam == SQUARE_TIME)
     {
         SquareTime(painter, img);
+    }
+    else if(paintingParam == BOIDS)
+    {
+        Boids(painter, img);
     }
     else
     {

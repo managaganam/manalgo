@@ -8,8 +8,10 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp \
-    squaretime.cpp
+    squaretime.cpp \
+    boids.cpp
 
 HEADERS += \
     squaretime.h \
-    utils.h
+    utils.h \
+    boids.h
