@@ -548,7 +548,7 @@ void nous(QPainter *painter)
             }
 
             // Mutation
-            int nbMutation = random(1, 10);
+            int nbMutation = random(1, 15);
             for(int i=0; i<nbMutation; ++i)
             {
                 int ind = random(0, populationSize - 1);
